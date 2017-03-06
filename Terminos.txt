@@ -1,0 +1,3 @@
+Slat >> https://en.wikipedia.org/wiki/Salt_(cryptography), https://es.wikipedia.org/wiki/Sal_(criptograf%C3%ADa)
+IV >> (Initialization Vector) https://es.wikipedia.org/wiki/Vector_de_inicializaci%C3%B3n
+Operador de Resolución de Ámbito (::) >> http://php.net/manual/es/language.oop5.paamayim-nekudotayim.php
