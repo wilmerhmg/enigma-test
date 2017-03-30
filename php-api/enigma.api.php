@@ -37,9 +37,9 @@ class enigma{
     }
 
     public function decrypttest(){
-        // Establecer zona horaria por si acaso
+        // Establecer zona horaria por si acaso a una hora internacional
         date_default_timezone_set('UTC');
-        // Obtener algunos datos de prueba para cifrar, se trata de una ISO 8601 timestamp
+        // Obtener algunos datos de prueba para cifrar
         $toEncrypt = date('c');
 
         // Obtener la clave de la sesión
@@ -48,12 +48,10 @@ class enigma{
         $encrypted = sqAES::crypt($key, $toEncrypt);
 
         Header('Content-type: application/json');
-        echo json_encode(
-            array(
+        echo json_encode(array(
             'encrypted' => $encrypted,
-            'unencrypted' => $toEncrypt,
-        )
-        );
+            'unencrypted' => $toEncrypt
+        ));
         exit();
     }
 
