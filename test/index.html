@@ -19,34 +19,79 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-lg-offset-4">
-                   <iframe name="debug" id="debug"></iframe>
+                <div class="col-xs-4">
                     <form id="basico" action="controlador.php" method="POST" role="form" target="debug">
-                        <legend>Enviar informacion</legend>
+                        <legend>Formulario Basico <br><small><small>(Cliente->Servidor)</small></small></legend>
 
                         <div class="form-group">
-                            <label for="">Valor Uno</label>
-                            <input type="text" class="form-control" name="nombres" placeholder="Input field">
+                            <label for="">Input tipo Text</label>
+                            <input type="text" class="form-control" name="input_text" placeholder="Input field">
                         </div>
                         <div class="form-group">
-                            <label for="">Valor dos</label>
-                            <input type="number" class="form-control" name="edad" placeholder="Input field">
+                            <label for="">Input tipo Number</label>
+                            <input type="number" class="form-control" name="input_number" placeholder="Input field">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Input tipo Email</label>
+                            <input type="email" class="form-control" name="input_email" placeholder="Input field">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Input tipo Select</label>
+                            <select name="select_simple" class="form-control" >
+                                <option value="Opcion_1"> Opcion 1</option>
+                                <option value="Opcion_2"> Opcion 2</option>
+                                <option value="Opcion_3"> Opcion 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Input Select Multiple</label>
+                            <select class="form-control" name="select_multiple[]" multiple="multiple">
+                                <option value="1">Valor 1</option>
+                                <option value="2">Valor 2</option>
+                                <option value="3">Valor 3</option>
+                                <option value="4">Valor 4</option>
+                                <option value="5">Valor 5</option>
+                                <option value="6">Valor 6</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Check Box</label>
+                            <input name="comida[]" type="checkbox" value="1"/>Pizza
+                            <input name="comida[]" type="checkbox" value="2"/>Frutas
+                            <input name="comida[]" type="checkbox" value="3"/>Verduras
+                        </div>
+                        <div class="form-group">
+                            <label for="">Radio </label>
+                            <input type="radio" name="empresa" value="1" > Pequeña
+                            <input type="radio" name="empresa" value="2" > Grande
+                            <input type="radio" name="empresa" value="3" > Corporacion
                         </div>
                         <button type="submit" class="btn btn-primary" name="sender">Enviar</button>
                         <button type="reset" class="btn btn-primary">Limpiar</button>
 
                     </form>
+                    <label>Salida en el servidor</label>
+                    <iframe width="100%" height="280px" name="debug" id="debug"></iframe>
+                </div>
+                <div class="col-xs-4">
+                    <form id="basico" action="controlador.php" method="POST" role="form" target="debug2">
+                        <legend>Formulario Bidireccional <br><small><small>(Cliente->Servidor/Servidor->Cliente)</small></small></legend>
+                        <p style="text-align:center">
+                        <img src="http://findicons.com/static/images/logo/not_found.png">
 
+                        </p>
+                        <h4 style="text-align: center;">Aun no se me ocurre un ejemplo del cifrado bidireccional</h4>
+                    </form>
+                    <iframe width="100%" height="280px" name="debug" id="debug2"></iframe>
                 </div>
             </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="http://carvajal.dev/assets/js/jquery.min.2.4.js"></script>
         <script src="../js-api/enigma.js"></script>
         <script type="text/javascript">
             $(function(){
-              $("#basico").Enigma({
+                $("#basico").Enigma({
                     getKeysURL: "controlador.php?getPublicKey=true",
                     handshakeURL: "controlador.php?handshake=true",
                 });
