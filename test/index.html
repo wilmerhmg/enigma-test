@@ -20,7 +20,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-lg-offset-4">
-                    <form id="basico" action="controlador.php" method="POST" role="form">
+                   <iframe name="debug" id="debug"></iframe>
+                    <form id="basico" action="controlador.php" method="POST" role="form" target="debug">
                         <legend>Enviar informacion</legend>
 
                         <div class="form-group">
@@ -31,7 +32,9 @@
                             <label for="">Valor dos</label>
                             <input type="number" class="form-control" name="edad" placeholder="Input field">
                         </div>
-                        <button type="submit" class="btn btn-primary">Enviar</button>
+                        <button type="submit" class="btn btn-primary" name="sender">Enviar</button>
+                        <button type="reset" class="btn btn-primary">Limpiar</button>
+
                     </form>
 
                 </div>
@@ -39,6 +42,7 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="http://carvajal.dev/assets/js/jquery.min.2.4.js"></script>
         <script src="../js-api/enigma.js"></script>
         <script type="text/javascript">
             $(function(){

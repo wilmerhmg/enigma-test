@@ -6,4 +6,3 @@ $Enigma->go();
 
 //header('Content-type: text/plain');
 var_dump($_POST);
-die();
