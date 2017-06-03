@@ -4,5 +4,5 @@ $Enigma = new Enigma('../php-api/keys/01/rsa_1024_pub.pem', '../php-api/keys/01/
 $Enigma->go();
 
 
-//header('Content-type: text/plain');
-var_dump($_POST);
+header('Content-type: text/plain');
+print_r($_POST);

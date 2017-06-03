@@ -74,20 +74,20 @@
                     <iframe width="100%" height="280px" name="debug" id="debug"></iframe>
                 </div>
                 <div class="col-xs-4">
-                    <form id="basico" action="controlador.php" method="POST" role="form" target="debug2">
-                        <legend>Formulario Bidireccional <br><small><small>(Cliente->Servidor/Servidor->Cliente)</small></small></legend>
-                        <p style="text-align:center">
-                        <img src="http://findicons.com/static/images/logo/not_found.png">
-
-                        </p>
-                        <h4 style="text-align: center;">Aun no se me ocurre un ejemplo del cifrado bidireccional</h4>
-                    </form>
-                    <iframe width="100%" height="280px" name="debug" id="debug2"></iframe>
+                    <p id="status"><span style="font-size: 16px;">Encrypting channel ...</span></p>
+                    String: <input type="text" id="text" disabled="disabled" /> <button id="encrypt" disabled="disabled">encrypt</button><button id="decrypt" disabled="disabled">decrypt</button><button id="serverChallenge" disabled="disabled">get encrypted time from server</button><br/>
+                    Log:<br/>
+                    <textarea cols="60" rows="25" id="log"></textarea>
                 </div>
             </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
+        <!--script src="http://wito.dev/carvajal/js/jquery-3.1.1.min.js"></script-->
+        <script
+                src="http://code.jquery.com/jquery-1.4.2.js"
+                integrity="sha256-lcAjyA3+DTAwTFgkSHiZUGH4eAGmbapda/TyUSvg5vk="
+                crossorigin="anonymous"></script>
+        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script-->
         <script src="../js-api/enigma.js"></script>
         <script type="text/javascript">
             $(function(){
@@ -95,6 +95,56 @@
                     getKeysURL: "controlador.php?getPublicKey=true",
                     handshakeURL: "controlador.php?handshake=true",
                 });
+
+                /*Bidireccional*/
+                var password = $.Enigma.encrypt("XXXX", "turbo");
+
+                $.Enigma.authenticate(password, "controlador.php?getPublicKey=true", "controlador.php?handshake=true", function(AESKey) {
+                    console.info('claves obtenidas');
+                    $("#text,#encrypt,#decrypt,#serverChallenge").attr("disabled",false);
+                }, function() {
+                    // Authentication failed
+                });
+
+                $("#encrypt").click(function() {
+                    var encryptedString = $.Enigma.encrypt($("#text").val(), password);
+                    $("#log").prepend("\n").prepend("----------");
+                    $("#log").prepend("\n").prepend("String: " + $("#text").val());
+                    $("#log").prepend("\n").prepend("Encrypted: " + encryptedString);
+                    $.ajax({
+                        url: "controlador.php",
+                        dataType: "json",
+                        type: "POST",
+                        data: {
+                            Enigma: encryptedString
+                        },
+                        success: function(response) {
+                            $("#log").prepend("\n").prepend("Server decrypted: " + response);
+                        }
+                    });
+                });
+
+                $("#serverChallenge").click(function() {
+                    $.ajax({
+                        url: "controlador.php?decrypttest=true",
+                        dataType: "json",
+                        type: "POST",
+                        success: function(response) {
+                            $("#log").prepend("\n").prepend("----------");
+                            $("#log").prepend("\n").prepend("Server original: " + response.unencrypted);
+                            $("#log").prepend("\n").prepend("Server sent: " + response.encrypted);
+                            var decryptedString = $.Enigma.decrypt(response.encrypted, password);
+                            $("#log").prepend("\n").prepend("Decrypted: " + decryptedString);
+                        }
+                    });
+                });
+
+                $("#decrypt").click(function() {
+                    var decryptedString = $.Enigma.decrypt($("#text").val(), password);
+                    $("#log").prepend("\n").prepend("----------");
+                    $("#log").prepend("\n").prepend("Decrypted: " + decryptedString);
+                });
+                /*Bidireccional*/
             });
         </script>
     </body>

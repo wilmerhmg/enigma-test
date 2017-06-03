@@ -1,3 +1,6 @@
+/*
+* Requiere jQuery Minima 1.4.2, recomienda 1.6.1 + hasta la version actual.
+*/
 (function($) {
     $.Enigma = function(el, options) {
         var base = this;
