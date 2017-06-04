@@ -1,5 +1,6 @@
 <?php
-require_once 'third-party/sqAES.php';
+require_once 'sqAES.php';
+require_once 'pollify.php';
 
 class enigma{
     private $private_key_file;
@@ -7,21 +8,40 @@ class enigma{
 
     const SESSION_KEY = 'jEnigmaKey';
     const POST_KEY = 'Enigma';
-    const COUNT_ENIGMA = 'Enigma_count';
+    const POST_ENIGMA = 'Enigma_position';
 
-    public function __construct($public_key_file, $private_key_file){
+    public function __construct(){
         $this->session_start();
         //Generar Llave Aleatoria
-        if(!isset($_SESSION[self::COUNT_ENIGMA]) || !$_SESSION[self::COUNT_ENIGMA]){
 
+        $no = array('.', '..');
+        $handle = opendir(dirname(__FILE__).'/keys');
+        $keys = array();
+        while ($file = readdir($handle)) {
+            $key = array('priv' => dirname(__FILE__).'/keys/'.$file.'/priv.pem', 'pub'=> dirname(__FILE__).'/keys/'.$file.'/pub.pem');
+            if (is_dir(dirname(__FILE__).'/keys/'.$file) && !in_array($file, $no)) {
+                $keys[] = $key;
+            }
         }
-        $this->public_key_file = $public_key_file;
-        $this->private_key_file = $private_key_file;
+        closedir($handle);
+
+        if((!isset($_SESSION[self::POST_ENIGMA]) || (empty($_SESSION[self::POST_ENIGMA]) && $_SESSION[self::POST_ENIGMA]!=0)) && count($keys)){
+            $_SESSION[self::POST_ENIGMA] = random_int(0, count($keys)-1);
+        }elseif(!count($keys)){
+            var_dump($keys);
+            throw new Exception('No existen grupos de llaves');
+            exit();
+        }
+
+        $this->public_key_file = $keys[$_SESSION[self::POST_ENIGMA]]['pub'];
+        $this->private_key_file = $keys[$_SESSION[self::POST_ENIGMA]]['priv'];
 
         if (!is_readable($this->private_key_file)) {
+            var_dump($this->private_key_file);
             throw new Exception('No se puede leer la clave privada');
         }
         if (!is_readable($this->public_key_file)) {
+            var_dump($this->public_key_file);
             throw new Exception('No se puede leer la clave publica');
         }
 
@@ -30,7 +50,6 @@ class enigma{
     public function getPublicKey(){
         Header('Content-type: application/json');
         echo json_encode(array('publickey' => file_get_contents($this->public_key_file)));
-        $_SESSION[self::COUNT_ENIGMA]=1;
         exit();
     }
 
@@ -39,7 +58,6 @@ class enigma{
         $_SESSION[self::SESSION_KEY] = $key;
         Header('Content-type: application/json');
         echo json_encode(array('challenge' =>  sqAES::crypt($key, $key)));
-        $_SESSION[self::COUNT_ENIGMA]=2;
         exit();
     }
 
@@ -73,7 +91,6 @@ class enigma{
         $_REQUEST = array_merge($_REQUEST, $_REQUEST);
         $_POST = array_merge($_POST,$_REQUEST);
         $_GET = array_merge($_GET,$_REQUEST);
-        $_SESSION[self::COUNT_ENIGMA] = 0;
     }
 
     public function go(){
