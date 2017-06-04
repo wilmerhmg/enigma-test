@@ -4,7 +4,6 @@
 (function($) {
     $.Enigma = function(el, options) {
         var base = this;
-
         base.$el = $(el);
         base.el = el;
 
@@ -53,7 +52,7 @@
 
         base.init();
 
-    /**
+        /**
     * Crea una cadena aleatoria (clave) para utilizarla en el algoritmo AES
     */
         base.getKey = function() {
@@ -83,25 +82,52 @@
     */
         base.authenticate = function(success, failure) {
             var key = base.getKey();
-            $.Enigma.authenticate(key, base.options.getKeysURL, base.options.handshakeURL, success, failure);
+            $.Enigma.authenticateOne(key, base.options.getKeysURL, base.options.handshakeURL, success, failure);
+        };
+
+        this.UKey = function (){
+            return base_key;
         };
     };
 
     /**
-  * Se autentica con el servidor
+  * Autenticacion unica ante el servidor, se usa antes del evento submit
   * @param {string} AESEncryptionKey La clave AES
   * @param {string} PublicKeyURL La URL de la clave pública
   * @param {string} handshakeURL La URL del handshake
   * @param {function} callback success La función para llamar si la operación ha sido satisfactoria
   * @param {function} callback failure La función de llamada si se ha producido un error
   */
-    $.Enigma.authenticate = function(AESEncryptionKey, publicKeyURL, handshakeURL, success, failure) {
+    $.Enigma.authenticateOne = function(AESEncryptionKey, publicKeyURL, handshakeURL, success, failure) {
         $.Enigma.getPublicKey(publicKeyURL, function() {
             $.Enigma.encryptKey(AESEncryptionKey, function(encryptedKey) {
                 $.Enigma.handshake(handshakeURL, encryptedKey, function(response) {
                     if ($.Enigma.challenge(response.challenge, AESEncryptionKey)) {
                         /*Bindeo en Javascritp .call o .bind (Envia contexto)*/
                         success.call(this, AESEncryptionKey);
+                    } else {
+                        failure.call(this);
+                    }
+                });
+            });
+        });
+    };
+
+    /**
+  * Se autentica con el servidor
+  * @param {string} PublicKeyURL La URL de la clave pública
+  * @param {string} handshakeURL La URL del handshake
+  * @param {function} callback success La función para llamar si la operación ha sido satisfactoria
+  * @param {function} callback failure La función de llamada si se ha producido un error
+  */
+
+    $.Enigma.authenticate = function(publicKeyURL, handshakeURL, success, failure) {
+        $.Enigma.getPublicKey(publicKeyURL, function() {
+            $.Enigma.encryptKey($.Enigma.UKey(), function(encryptedKey) {
+                $.Enigma.handshake(handshakeURL, encryptedKey, function(response) {
+                    if ($.Enigma.challenge(response.challenge, $.Enigma.UKey())) {
+                        /*Bindeo en Javascritp .call o .bind (Envia contexto)*/
+                        success.call(this, $.Enigma.UKey());
                     } else {
                         failure.call(this);
                     }
@@ -130,8 +156,8 @@
   * @param {string} secret Llave AES (Secreta)
   * @returns {string} El resultado del descifrado (Plaintext)
   */
-    $.Enigma.decrypt = function(data, secret) {
-        return $.Enigma.hex2string(CryptoJS.AES.decrypt(data, secret) + "");
+    $.Enigma.decrypt = function(data,secret) {
+        return $.Enigma.hex2string(CryptoJS.AES.decrypt(data, secret || $.Enigma.UKey()) + "");
     };
 
     /**
@@ -140,9 +166,9 @@
   * @param {string} secret Llave AES (Secreta)
   * @returns {string} El resultado de la encriptación (Ciphertext)
   */
-    $.Enigma.encrypt = function(data, secret) {
+    $.Enigma.encrypt = function(data,secret) {
         //return CryptoJS.AES.encrypt(data, secret).toString();
-        return CryptoJS.AES.encrypt(data, secret) + "";
+        return CryptoJS.AES.encrypt(data, secret || $.Enigma.UKey()) + "";
     };
 
     /**
@@ -221,6 +247,17 @@
             (new $.Enigma(this, options));
         });
     };
+
+    $.Enigma.aRandKey = function(length){
+        var result = '';
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+        return result;
+    };
+    var base_key = $.Enigma.aRandKey(128/4);
+    $.Enigma.UKey = function(){
+        return base_key;
+    }
 
 })(jQuery);
 

@@ -15,7 +15,7 @@ class enigma{
         //Generar Llave Aleatoria
 
         $no = array('.', '..');
-        $handle = opendir(dirname(__FILE__).'/keys');
+        $handle = opendir(dirname(__FILE__).'/keys/');
         $keys = array();
         while ($file = readdir($handle)) {
             $key = array('priv' => dirname(__FILE__).'/keys/'.$file.'/priv.pem', 'pub'=> dirname(__FILE__).'/keys/'.$file.'/pub.pem');
@@ -93,6 +93,13 @@ class enigma{
         $_GET = array_merge($_GET,$_REQUEST);
     }
 
+    public static function onlyDecrypt(){
+        self::session_start();
+        Header('Content-type: text/plain');
+        echo (sqAES::decrypt($_SESSION[self::SESSION_KEY], $_REQUEST[self::POST_KEY]));
+        exit();
+    }
+
     public function go(){
 
         if (isset($_GET['getPublicKey'])) {
@@ -105,6 +112,10 @@ class enigma{
 
         if (isset($_GET['decrypttest'])) {
             $this->decrypttest();
+        }
+
+        if(isset($_GET['onlydecrypt'])){
+            $this->onlyDecrypt();
         }
 
         if (isset($_POST[self::POST_KEY]) || isset($_GET[self::POST_KEY])) {
