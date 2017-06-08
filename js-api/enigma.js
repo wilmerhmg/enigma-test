@@ -250,7 +250,7 @@
 
     $.Enigma.aRandKey = function(length){
         var result = '';
-        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        var chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
         for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
     };
@@ -4576,7 +4576,7 @@ var JSEnigmaMethodsExport = {};
 })(JSEnigmaMethodsExport);
 var JSEncrypt = JSEnigmaMethodsExport.JSEncrypt;
 
-// Important call
+// Importacion de metodos;
 $.Enigma.crypt = new JSEncrypt();
 
 /* http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/aes.js */
