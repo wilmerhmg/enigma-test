@@ -24,13 +24,13 @@ class sqAES{
          */
         $rounds = 3;
         $data00 = $password.$salt;
-        $md5_hash = array();
-        $md5_hash[0] = md5($data00, true);
-        $result = $md5_hash[0];
+        $sha2_hash = array();
+        $sha2_hash[0] = hash('md5', $data00, true);
+        $result = $sha2_hash[0];
 
         for ($i = 1; $i < $rounds; $i++) {
-            $md5_hash[$i] = md5($md5_hash[$i - 1].$data00, true);
-            $result .= $md5_hash[$i];
+            $sha2_hash[$i] = hash('md5', $sha2_hash[$i - 1].$data00, true);
+            $result .= $sha2_hash[$i];
         }
 
         $key = substr($result, 0, 32);
@@ -56,7 +56,7 @@ class sqAES{
 
         // Semilla en la llabe(32) y un IV de (16) = 48
         while (strlen($salted) < 48) {
-            $dx = md5($dx.$password.$salt, true);
+            $dx = hash('md5',$dx.$password.$salt, true);
             $salted .= $dx;
         }
 
