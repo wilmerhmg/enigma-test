@@ -100,8 +100,6 @@
                 });
 
                 /*Bidireccional*/
-                var password = $.Enigma.encrypt("XXXX", "turbo");
-
                 $.Enigma.authenticate("controlador.php?getPublicKey=true", "controlador.php?handshake=true", function(AESKey) {
                     console.info('claves obtenidas');
                     $("#status").hide();
