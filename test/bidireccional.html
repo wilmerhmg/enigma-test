@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Enigma Bidireccional</title>
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn t work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4 col-xs-offset-2">
+                    <p id="status"><span style="font-size: 16px;">Sincronizando Claves...</span></p>
+                    String: <input type="text" id="text" disabled="disabled" />
+                    <button id="encrypt" disabled="disabled">encrypt</button>
+                    <button id="decrypt" disabled="disabled">decrypt</button>
+                    <button id="serverChallenge" disabled="disabled">Test Tiempo Cifrado de Servidor</button>
+                    <br/>Salidas:<br/>
+                    <textarea cols="60" rows="25" id="log"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="../js-api/enigma.min.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $.Enigma.authenticate("controlador.php?getPublicKey=true", "controlador.php?handshake=true", function(AESKey) {
+                    console.info('claves obtenidas');
+                    $("#status").hide();
+                    $("#text,#encrypt,#decrypt,#serverChallenge").attr("disabled",false);
+                }, function() {
+                    // Authentication failed
+                });
+
+                $("#encrypt").click(function() {
+                    var encryptedString = $.Enigma.encrypt($("#text").val());
+                    $("#log").prepend("\n").prepend("----------");
+                    $("#log").prepend("\n").prepend("Cadena: " + $("#text").val());
+                    $("#log").prepend("\n").prepend("Cifrada: " + encryptedString);
+
+
+                    $.ajax({
+                        url: "controlador.php?onlydecrypt=true",
+                        dataType: "text",
+                        type: "POST",
+                        data: {
+                            Enigma: encryptedString
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            $("#log").prepend("\n").prepend("Server Decifra: " + response);
+                        }
+                    });
+                });
+
+                $("#serverChallenge").click(function() {
+                    $.ajax({
+                        url: "controlador.php?decrypttest=true",
+                        dataType: "json",
+                        type: "POST",
+                        success: function(response) {
+                            $("#log").prepend("\n").prepend("----------");
+                            $("#log").prepend("\n").prepend("Server original: " + response.unencrypted);
+                            $("#log").prepend("\n").prepend("Server envio: " + response.encrypted);
+                            var decryptedString = $.Enigma.decrypt(response.encrypted);
+                            $("#log").prepend("\n").prepend("Cliente Decifra: " + decryptedString);
+                        }
+                    });
+                });
+
+                $("#decrypt").click(function() {
+                    var decryptedString = $.Enigma.decrypt($("#text").val());
+                    $("#log").prepend("\n").prepend("----------");
+                    $("#log").prepend("\n").prepend("Decifrado: " + decryptedString);
+                });
+            });
+        </script>
+    </body>
+</html>
