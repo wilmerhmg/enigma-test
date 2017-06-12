@@ -1,11 +1,18 @@
-#### Funciones y metodos
+# Enigma
 
-|               Metodo              |             Parametros             |                               Descripción                                  |
-| --------------------------------- | ---------------------------------- | -------------------------------------------------------------------------- |
-| $.Enigma.authenticate             | AESEncryptionKey[string], publicKeyURL[string], handshakeURL[string], success(AESEncryptionKey)[function], failure(AESEncryptionKey)[function] | <small>Esta funcion es requerida antes de cualquier cifrado, optiene una llave publica del servidor y genera el handshake correspondiente. Su funcionamiento es:</small> <br> **1)** Cliente genera una clave (Cuando sea posible la ejecucion del evento mousemovement)<br> **2)** El cliente solicita clave pública RSA desde servidor. <br> **3)** El cliente cifra la contraseña con la clave pública RSA <br> **4)** El servidor descifra la contraseña y la almacena en la sesión <br> **5)** El servidor Cifra la contraseña con AES y la devuelve al Cliente <br> **6)** El cliente lo encripta con AES con la contraseña <br> **7)** Ambos tienen ahora la misma clave "secreta" que se utiliza para la comunicación |
-| $.Enigma.decrypt                  | data[string], key[string]          | Descifra los "data" con "key" con AES y devuelve el resultado |
-| $.Enigma.encrypt                  | data[string], key[string]          | Cifra "data" con "key" con AES y devuelve el resultado |
-| $.Enigma.challenge                | challenge[string], key[string]     | Sólo se utiliza internamente descifra "challenge" con "key" y comprueba si son iguales para asegurar el servidor entiende la solicitud. |
-| $.Enigma.handshake                | url[string], key[string], callback(response)[function] | Sólo se utiliza internamente, le dice al servidor la clave para la comunicación |
-| $.Enigma.getKeys                  | url[string],callback(keys)[function] | Sólo se utiliza internamente, esta función hace una solicitud al servidor, y devuelve las llaves y ejecuta el callback para cada llave |
-| $.Enigma.encryptKey            | stringToEnrypt[string],keys[keyObject],callback(encrypted) | Sólo se utiliza internamente, esta función cifra una cadena con la clave pública RSA y devuelve el valor cifrado en el callback. El parámetro keys debe ser resultado la función $.Enigma.getKeys |
+Algoritmo de encriptación bidireccional en arquitectura cliente-servidor para sitios web.
+
+## Descargar Enigma
+
+Puedes obtener enigma por descarga directa.
+
+- Descargar <a href="https://github.com/Dev-Wito/enigma/archive/master.zip" donwload>enigma-master.zip</a>
+
+O clonando el proyecto con Git.
+```
+$ git clone https://github.com/Dev-Wito/enigma.git
+```
+
+## Documentación
+
+- <a href="http://enigma.itp.edu.co/docs/introduccion.html">Ir a la documentación</a>

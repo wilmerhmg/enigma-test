@@ -12,9 +12,9 @@
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn t work if you view the page via file:// -->
         <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
     </head>
     <body>
         <div class="container">
@@ -26,14 +26,6 @@
                         <div class="form-group">
                             <label for="">Input tipo Text</label>
                             <input type="text" class="form-control" name="input_text" placeholder="Input field">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Input tipo Number</label>
-                            <input type="number" class="form-control" name="input_number" placeholder="Input field">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Input tipo Email</label>
-                            <input type="email" class="form-control" name="input_email" placeholder="Input field">
                         </div>
                         <div class="form-group">
                             <label for="">Input tipo Select</label>
@@ -71,13 +63,15 @@
 
                     </form>
                     <label>Salida en el servidor</label>
+                </div>
+                <div class="col-xs-4">
                     <iframe width="100%" height="280px" name="debug" id="debug"></iframe>
                 </div>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
-        <script src="../js-api/enigma.min.js"></script>
+        <script src="../js-api/enigma.js"></script>
         <script type="text/javascript">
             $(function(){
                 $("#basico").Enigma({
