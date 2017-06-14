@@ -317,7 +317,7 @@
             });
 
             /*Sincronizar llaves*/
-            $.Enigma.authenticate("controlador.php?getPublicKey=true", "controlador.php?handshake=true", function(AESKey){
+            $.Enigma.authenticate("validador.php?getPublicKey=true", "validador.php?handshake=true", function(AESKey){
                 console.info("Llaves obtenidas");
             },function(){
                 console.warn("No se ha podido cirfrar");
@@ -362,7 +362,7 @@
 
                             //Informacion descifrada
                             response = JSON.parse($.Enigma.decrypt(response));
-                            console.log(JSON.parse(response);
+                            console.log(response);
                         }
                     });
                 }
